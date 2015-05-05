@@ -88,7 +88,7 @@ class VersionInformationDataCollector extends DataCollector
         $ahead = "$head..$remote";
         $behind = "$remote..$head";
 
-        $process = new Process('git --no-pager log -1 --pretty=\'{"hash":"%h","date":"%ai","name":"%an","branch":"%d"}\' ' . $rootDir);
+        $process = new Process('cd '.$rootDir.'; git --no-pager log -1 --pretty=\'{"hash":"%h","date":"%ai","name":"%an","branch":"%d"}\'');
         $process->run();
         $output = $process->getOutput();
         if (!$process->isSuccessful()) {
@@ -96,7 +96,7 @@ class VersionInformationDataCollector extends DataCollector
         }
         $this->data->information = json_decode($output);
 
-        $process = new Process('git --no-pager log -1 --decorate ' . $rootDir);
+        $process = new Process('cd '.$rootDir.'; git --no-pager log -1 --decorate');
         $process->run();
         $output = $process->getOutput();
         if (!$process->isSuccessful()) {
@@ -104,7 +104,7 @@ class VersionInformationDataCollector extends DataCollector
         }
         $this->data->informationText = $output;
 
-        $process = new Process('git --no-pager status --porcelain ' . $rootDir);
+        $process = new Process('cd '.$rootDir.'; git --no-pager status --porcelain');
         $process->run();
         $output = $process->getOutput();
         if (!$process->isSuccessful()) {
@@ -113,7 +113,7 @@ class VersionInformationDataCollector extends DataCollector
         $this->data->status = $output ? explode("\n", trim($output)) : array();
         $this->data->statusText = $output;
 
-        $process = new Process('git --no-pager log --pretty=format: '.$ahead.' --name-status ' . $rootDir);
+        $process = new Process('cd '.$rootDir.'; git --no-pager log --pretty=format: '.$ahead.' --name-status');
         $process->run();
         $output = trim($process->getOutput());
         if (!$process->isSuccessful()) {
@@ -122,7 +122,7 @@ class VersionInformationDataCollector extends DataCollector
         $this->data->ahead = $output ? explode("\n", trim($output)) : array();
         $this->data->ahead = array_filter($this->data->ahead);
 
-        $process = new Process('git --no-pager log '.$ahead.' --name-status ' . $rootDir);
+        $process = new Process('cd '.$rootDir.'; git --no-pager log '.$ahead.' --name-status');
         $process->run();
         $output = trim($process->getOutput());
         if (!$process->isSuccessful()) {
@@ -130,7 +130,7 @@ class VersionInformationDataCollector extends DataCollector
         }
         $this->data->aheadText = $output;
 
-        $process = new Process('git --no-pager log --pretty=format: '.$behind.' --name-status ' . $rootDir);
+        $process = new Process('cd '.$rootDir.'; git --no-pager log --pretty=format: '.$behind.' --name-status');
         $process->run();
         $output = $process->getOutput();
         if (!$process->isSuccessful()) {
@@ -139,7 +139,7 @@ class VersionInformationDataCollector extends DataCollector
         $this->data->behind = $output ? explode("\n", trim($output)) : array();
         $this->data->behind = array_filter($this->data->behind);
 
-        $process = new Process('git --no-pager log '.$behind.' --name-status ' . $rootDir);
+        $process = new Process('cd '.$rootDir.'; git --no-pager log '.$behind.' --name-status ');
         $process->run();
         $output = $process->getOutput();
         if (!$process->isSuccessful()) {
